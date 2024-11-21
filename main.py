@@ -35,6 +35,36 @@ async def on_ready():
         print("OpenAI API key is missing or invalid.")
     print(f"We have logged in as {bot.user}")
 
+@bot.command(name="help")
+async def help_command(ctx):
+    """Displays a help message with all commands."""
+    help_message = (
+        "**Available Commands:**\n"
+        "`!help` - Show this help message.\n"
+        "`!review <GitHub link>` - Review a GitHub repository for code quality.\n"
+        "`!improve <code>` - Suggest improvements for a code snippet."
+    )
+    await ctx.send(help_message)
+
+@bot.command(name="improve")
+async def improve_command(ctx, *, code: str = None):
+    """Suggests improvements for a given code snippet."""
+    if not code:
+        await ctx.send("Please provide a code snippet. Usage: `!improve <code>`")
+        return
+
+    try:
+        prompt = f"Here is some code:\n```\n{code}\n```\nPlease suggest improvements or optimizations for it."
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a programming expert."},
+                {"role": "user", "content": prompt},
+            ],
+        )
+        await ctx.send(response["choices"][0]["message"]["content"])
+    except Exception as e:
+        await ctx.send(f"An error occurred: {e}")
 
 @bot.event
 async def on_message(message):
