@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 import os
 import re
 
+import requests
+import base64
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -70,11 +73,6 @@ async def on_message(message):
             await message.channel.send(review_by_gpt4_response)
 
         return
-
-import requests
-import base64
-import re
-import os
 
 def get_all_files(owner, repo, path="", headers=None):
     files = []
@@ -162,9 +160,15 @@ def review_by_gpt4(github_link):
         return f"Ocorreu um erro ao obter a resposta: {e}"
 
 @bot.command(name="improve")
-async def suggest_optimizations(ctx, github_link):
+async def suggest_optimizations(ctx):
     try:
         # Extract owner and repo from the link
+        args = ctx.message.content.split(' ')
+        if len(args) < 2:
+            await ctx.send("Please provide a GitHub link for improvement suggestions.")
+            return
+            
+        github_link = args[1]
         match = re.match(r'https?://github\.com/([^/]+)/([^/]+)/?', github_link)
         if not match:
             return "Invalid GitHub repository link."
@@ -212,5 +216,6 @@ async def suggest_optimizations(ctx, github_link):
         return
     except Exception as e:
         return f"An error occurred while getting the response: {e}"
+
 # Run the bot
 bot.run(DISCORD_TOKEN)
