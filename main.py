@@ -38,6 +38,7 @@ async def on_ready():
         print("OpenAI API key is missing or invalid.")
     print(f"We have logged in as {bot.user}")
 
+bot.remove_command('help')
 @bot.command(name="help")
 async def help_command(ctx):
     """Displays a help message with all commands."""
