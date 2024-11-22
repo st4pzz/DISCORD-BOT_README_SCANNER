@@ -4,7 +4,14 @@ Welcome to the **ChatGPT Code Reviewer Bot**, a Python-based Discord bot designe
 
 This bot connects seamlessly to OpenAI's ChatGPT API to review and analyze code directly from GitHub links shared in a Discord server.
 
+## Authors
 
+This project is maintained by:
+
+- **Pedro Antônio**
+- **Sergio Ramella**
+
+---
 ## Why Use the ChatGPT Code Reviewer Bot?
 
 ### Code Speaks Louder When It's Understood
