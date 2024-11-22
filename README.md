@@ -67,7 +67,7 @@ The ChatGPT Code Reviewer Bot solves these issues by:
 
 ## Demonstration Video
 
-[![Demonstração do Projeto]](https://youtu.be/ooGFs6uvZ4g)
+[![Demonstração do Projeto](https://i9.ytimg.com/vi_webp/ooGFs6uvZ4g/mq2.webp?sqp=CNzp_7kG-oaymwEmCMACELQB8quKqQMa8AEB-AHsCYAC0AWKAgwIABABGCQgOCh_MA8=&rs=AOn4CLBlLmMONvnE_82brwPXO-cRN2Rq5w)](https://youtu.be/ooGFs6uvZ4g)
 
 ---
 
