@@ -1,0 +1,52 @@
+{
+    "on_ready": {
+      "openai_success": "OpenAI connection succeeded.",
+      "openai_fail": "Failed to connect to OpenAI: {error}",
+      "discord_token_missing": "Discord token is missing or invalid.",
+      "openai_key_missing": "OpenAI API key is missing or invalid.",
+      "logged_in": "We have logged in as {bot_user}"
+    },
+    "commands": {
+      "help": {
+        "description": "Displays a help message with all commands.",
+        "message": "**Available Commands:**\n`!help` - Show this help message.\n`!review <GitHub link>` - Review a GitHub repository for code quality.\n`!improve <code>` - Suggest improvements for a code snippet."
+      },
+      "improve": {
+        "missing_link": "Please provide a GitHub link for improvement suggestions.",
+        "invalid_link": "Invalid GitHub link. Please provide a valid GitHub repository link.",
+        "system_prompt": "You are a code optimization expert. Review the structure of the following repository and suggest improvements. Consider aspects like file organization, modularity, naming conventions, and overall code quality.",
+        "truncated_files": "... (file list truncated due to length)",
+        "user_prompt": "Here is the list of files in the repository:\n{file_list}\n\nPlease suggest optimizations for the structure of this repository.",
+        "error": "An error occurred while getting the response: {error}"
+      },
+      "review": {
+        "missing_link": "Please provide a GitHub link for review.",
+        "invalid_link": "Invalid GitHub link. Please provide a valid GitHub repository link.",
+        "regex_invalid": "Invalid GitHub link. Please provide a valid GitHub repository link.",
+        "error": "An error occurred while getting the response: {error}"
+      }
+    },
+    "review_by_gpt4": {
+      "invalid_github_link": "Link de repositório GitHub inválido.",
+      "readme_fail": "Não foi possível obter o README.md do repositório.",
+      "invalid_readme": "O repositório não contém um README.md válido.",
+      "system_prompt": "Você é um revisor de código que verifica cada arquivo em um repositório GitHub e indica se eles correspondem ou não ao README.md. Este sinal é uma resposta binária em markdown, na forma de uma lista de verificação.\nPor exemplo, se o README.md se refere a uma API e modelo:\narquivo | corresponde\nmodel.py sim/não\nmain.py sim/não\nSempre siga estritamente esta estrutura, lembre-se de checar o conteudo dos arquivos se lembrando do readme, por exemplo, se o readme descreve um modelo de IA e um dos arquivos contem um modelo que bata com a descrição, este está sim no readme",
+      "truncated_readme": "... (conteúdo do README.md truncado devido ao comprimento)",
+      "truncated_files": "... (lista de arquivos truncada devido ao comprimento)",
+      "user_prompt": "Aqui está o conteúdo do README.md:\n{readme_content}\n\nAqui está a lista de arquivos no repositório:\n{file_list}\n\nPor favor, verifique se cada arquivo corresponde ao README.md.",
+      "error": "Ocorreu um erro ao obter a resposta: {error}"
+    },
+    "on_message": {
+      "log_message": "enviou mensagem",
+      "ignore_bot": "message"
+    },
+    "git_link_val": {
+      "invalid_link": null
+    },
+    "constants": {
+      "max_readme_length": 1500,
+      "max_files": 100,
+      "max_message_length": 2000
+    }
+  }
+  
