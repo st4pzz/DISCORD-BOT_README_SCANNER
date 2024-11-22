@@ -46,26 +46,6 @@ async def help_command(ctx):
     )
     await ctx.send(help_message)
 
-@bot.command(name="improve")
-async def improve_command(ctx, *, code: str = None):
-    """Suggests improvements for a given code snippet."""
-    if not code:
-        await ctx.send("Please provide a code snippet. Usage: `!improve <code>`")
-        return
-
-    try:
-        prompt = f"Here is some code:\n```\n{code}\n```\nPlease suggest improvements or optimizations for it."
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "You are a programming expert."},
-                {"role": "user", "content": prompt},
-            ],
-        )
-        await ctx.send(response["choices"][0]["message"]["content"])
-    except Exception as e:
-        await ctx.send(f"An error occurred: {e}")
-
 @bot.event
 async def on_message(message):
 
@@ -149,7 +129,7 @@ def review_by_gpt4(github_link):
             "arquivo | corresponde\n"
             "model.py sim/não\n"
             "main.py sim/não\n"
-            "Sempre siga estritamente esta estrutura."
+            "Sempre siga estritamente esta estrutura, lembre-se de checar o conteudo dos arquivos se lembrando do readme, por exemplo, se o readme descreve um modelo de IA e um dos arquivos contem um modelo que bata com a descrição, este está sim no readme"
         )
 
         # Trunca o README se for muito longo
@@ -181,6 +161,56 @@ def review_by_gpt4(github_link):
     except Exception as e:
         return f"Ocorreu um erro ao obter a resposta: {e}"
 
+@bot.command(name="improve")
+async def suggest_optimizations(ctx, github_link):
+    try:
+        # Extract owner and repo from the link
+        match = re.match(r'https?://github\.com/([^/]+)/([^/]+)/?', github_link)
+        if not match:
+            return "Invalid GitHub repository link."
+        owner, repo = match.groups()
 
+        # Set up headers for GitHub API
+        headers = {'Accept': 'application/vnd.github.v3+json'}
+        GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+        if GITHUB_TOKEN:
+            headers['Authorization'] = f'token {GITHUB_TOKEN}'
+
+        # Get the list of files recursively
+        file_names = get_all_files(owner, repo, headers=headers)
+
+        # Prepare the prompt for the model
+        system_prompt = (
+            "You are a code optimization expert. Review the structure of the following repository and suggest improvements. "
+            "Consider aspects like file organization, modularity, naming conventions, and overall code quality."
+        )
+
+        # Truncate the list of files if too long
+        max_files = 100
+        if len(file_names) > max_files:
+            file_names = file_names[:max_files]
+            file_names.append("... (file list truncated due to length)")
+
+        user_prompt = (
+            f"Here is the list of files in the repository:\n{', '.join(file_names)}\n\n"
+            "Please suggest optimizations for the structure of this repository."
+        )
+
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+        )
+
+        # Split the response into multiple messages if it exceeds Discord's character limit
+        response_content = response["choices"][0]["message"]["content"]
+        max_message_length = 2000
+        for i in range(0, len(response_content), max_message_length):
+            await ctx.send(response_content[i:i + max_message_length])
+        return
+    except Exception as e:
+        return f"An error occurred while getting the response: {e}"
 # Run the bot
 bot.run(DISCORD_TOKEN)
